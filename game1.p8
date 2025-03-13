@@ -13,7 +13,7 @@ function _init()
 		flp=false,
 		dx=0,
 		dy=0,
-		max_dx=1.6,
+		max_dx=1.5,
 		max_dy=2.5,
 		acc=0.5,
 		dec=0.7,
@@ -134,6 +134,7 @@ function del_mapobj(obj,flag)
 	return collide
 end
 -->8
+
 --player update
 
 function player_update()
@@ -144,11 +145,13 @@ function player_update()
 	max_dy=player.max_dy
 	max_dx=player.max_dx
 	acc=player.acc 
+	boost=player.boost
 	
 	if player.power then
 		max_dy=9.5
-		max_dx=3
-		acc=5--not inc?
+		max_dx=2
+		acc=2
+		boost=4
 	elseif player.barreling then
 		max_dy=8.5
 	end
@@ -181,7 +184,7 @@ function player_update()
 	--jump
 	if btnp(⬆️)
 	and player.landed then
-		player.dy-=player.boost
+		player.dy-=boost
 		player.landed=false
 		player.energy-=1
 	end
@@ -238,14 +241,14 @@ function player_update()
 	--check collision left and right
 	if player.dx<0 then
 	
-		player.dx=limit_speed(player.dx,player.max_dx)
+		player.dx=limit_speed(player.dx,max_dx)
 	
 		if collide_map(player,"left",1) then
 			player.dx=0
 		end
 	elseif player.dx>0 then
 	
-		player.dx=limit_speed(player.dx,player.max_dx)
+		player.dx=limit_speed(player.dx,max_dx)
 		
 		if collide_map(player,"right",1) then
 			player.dx=0
@@ -278,7 +281,9 @@ function player_update()
 	end
 	
 	--energy
-	player.energy-=depletion
+	if not player.power then
+		player.energy-=depletion
+	end
 	
 end
 
