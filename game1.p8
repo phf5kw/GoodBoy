@@ -20,7 +20,7 @@ function _init()
 		max_dy=2.5,
 		acc=0.5,
 		dec=0.7,
-		boost=3,
+		boost=3.2,
 		drop=3,
 		anim=0,
 		running=false,
@@ -31,6 +31,7 @@ function _init()
 		power=false,
 		energy=100,
 		score=0,
+		has_jump=true,
 		
 		barrel_play=false, --idk
 	}
@@ -246,13 +247,20 @@ function player_update()
 		end
 	end
 	
+	--coyote time?
+	--if player.landed then
+		
+	--end
+	
 	--jump
 	if btnp(⬆️)
-	and player.landed then
+	and player.has_jump
+	and (player.landed or time()-c_time<0.8) then
 		player.dy-=boost
 		player.landed=false
 		player.energy-=1
 		sfx(0,2)
+		player.has_jump=false
 	end
 	
 	--barrel
@@ -307,6 +315,8 @@ function player_update()
 			player.barreling=false
 			player.dy=0
 			player.y-=(player.y+player.h)%8
+			c_time=time()
+			player.has_jump=true
 		end
 	elseif player.dy<0 then
 		barrel_play=false
@@ -464,6 +474,7 @@ function print_update()
 	yquad=flr(player.y/(128))
 	--print("yquad="..tostring(yquad),player.x,player.y-10,7)
 	print("landed="..tostring(player.landed),player.x,player.y-10,7)
+	print("has_jump="..tostring(player.has_jump),player.x,player.y-16,7)
 
 	--print score
 	xquad=flr(player.x/128)*128 
