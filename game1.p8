@@ -232,18 +232,16 @@ function player_update()
 			flr1x=flr(player.x/8)
 			flr2x=flr((player.x+player.w)/8)
 			flry=flr((player.y+player.h)/8)
+			local bg=0
+			if flr(player.x/128)*128<1 and flr(player.y/128)*128<1 then
+				bg=58 --set dirt instead
+			end
 			if fget(mget(flr1x,flry),2) then
-				mset(flr1x,flry,0) --destroy
-				if flr(player.x/128)*128<1 and flr(player.y/128)*128<1 then
-					mset(flr1x,flry,58) --destroy
-				end
+				mset(flr1x,flry,bg) --destroy
 			end
 			if fget(mget(flr2x,flry),2) then
-				mset(flr2x,flry,0) --destroy
-				if flr(player.x/128)*128<1 and flr(player.y/128)*128<1 then
-					mset(flr1x,flry,58) --destroy
-				end
-			end	
+				mset(flr2x,flry,bg) --destroy
+			end
 		elseif collide_map(player,"down",0) then
 			player.landed=true
 			player.falling=false
